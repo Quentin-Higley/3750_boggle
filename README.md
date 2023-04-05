@@ -1,1 +1,1 @@
-# 3750_boggle
+# Boggle Group Project for 3750
