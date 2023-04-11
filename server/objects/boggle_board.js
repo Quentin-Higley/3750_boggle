@@ -1,5 +1,13 @@
 class Board {
     constructor(board_size) {
+        /**
+         * Game board object that holds the board and generates a new board
+         * @param {number} board_size - The size of the board
+         *
+         * @property {string} board - The board
+         * @property {number} board_size - The size of the board
+         * @property {object} letter_frequency - The frequency of each letter
+         */
         this.board_size = board_size;
         this.board = "";
         this.letter_frequency = {
@@ -34,6 +42,13 @@ class Board {
     }
 
     normal_distribution(mean = 0, std = 1) {
+        /**
+         * Generates a random number from a normal distribution
+         * @param {number} mean - The mean of the distribution
+         * @param {number} std - The standard deviation of the distribution
+         *
+         * @returns {number} - A random number from a normal distribution
+         */
         let u = 1 - Math.random();
         let v = Math.random();
         let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
@@ -41,6 +56,11 @@ class Board {
     }
 
     generate_board() {
+        /**
+         * Generates a new board
+         *
+         * @returns {string} - The new board
+         */
         let letters = [];
         let size = this.board_size;
         let min_freq = 0.5;
@@ -65,7 +85,6 @@ class Board {
             }
 
             let count = Math.trunc((freq / 100) * Math.pow(size, 2));
-            // console.log(`key: ${key}, freq: ${freq / 100}, count: ${count}`);
             letters.push(key.repeat(count));
         }
         letters = letters.toString().split("");
@@ -81,6 +100,13 @@ class Board {
     }
 
     fisher_yates_shuffle(letters) {
+        /**
+         * Shuffles an array using the Fisher-Yates shuffle
+         *
+         * @param {array} letters - The array to shuffle
+         *
+         * @returns {array} - The shuffled array
+         */
         for (let i = letters.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [letters[i], letters[j]] = [letters[j], letters[i]];
