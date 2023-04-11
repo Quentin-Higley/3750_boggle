@@ -1,15 +1,15 @@
 class Player {
-    constructor(name) {
+    constructor(username) {
         /**`
          * Creates a player
          *
          * @param {string} name - name of the player
          *
-         * @property {string} name - name of the player
+         * @property {string} username - username of the player
          * @property {int} score - score of the player
          * @property {array} words - words the player has found
          */
-        this.name = name;
+        this.username = username;
         this.score = 0;
         this.words = [];
     }

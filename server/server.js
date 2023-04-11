@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 
+// datamuse routes
+const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+
 // import objects
 const Game = require("./objects/boggle_game.js");
 
@@ -45,7 +48,7 @@ app.use(
 configureDatabase();
 
 // game object
-var game = new Game(4, 180);
+var game = new Game(4, 60);
 
 // start the server
 app.listen(4000, () => {

@@ -12,6 +12,11 @@ function App() {
                 path="/"
                 element={<Replace />}
             />
+
+            <Route
+                path="/game"
+                element={<Game />}
+            />
         </Routes>
     );
 }
