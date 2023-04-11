@@ -4,14 +4,11 @@ const Player = require("./boggle_player");
 const BFS = require("./BreadthFirstSearch");
 
 class Game {
-    constructor(board_size, player_names, time_limit) {
+    constructor(board_size, time_limit) {
         this.board_size = board_size;
         this.time_limit = time_limit * 1000;
         this.board = new Board(board_size * board_size);
         this.players = [];
-        for (let name of player_names) {
-            this.players.push(new Player(name));
-        }
         this.bfs = new BFS(this.board, this.board_size);
 
         this.scoring = {
@@ -36,6 +33,10 @@ class Game {
             return 0;
         }
         return this.scoring[word.length];
+    }
+
+    add_player(name) {
+        this.players.push(new Player(name));
     }
 
     generate_board() {
@@ -65,4 +66,4 @@ class Game {
     }
 }
 
-export default Game;
+module.exports = Game;

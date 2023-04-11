@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 
+// import objects
+const Game = require("./objects/boggle_game.js");
+
 const app = express();
 
 app.use(
@@ -40,6 +43,9 @@ app.use(
 );
 
 configureDatabase();
+
+// game object
+var game = new Game(4, 180);
 
 // start the server
 app.listen(4000, () => {

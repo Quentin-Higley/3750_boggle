@@ -33,20 +33,51 @@ class Board {
         this.generate_board();
     }
 
+    normal_distribution(mean = 0, std = 1) {
+        let u = 1 - Math.random();
+        let v = Math.random();
+        let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        return z * std + mean;
+    }
+
     generate_board() {
-        letters = [];
-        size = this.board_size;
+        let letters = [];
+        let size = this.board_size;
+        let min_freq = 0.5;
+        let max_freq = 7;
+        let random_noise = this.normal_distribution(0, 0.5);
+        let vowels = ["A", "E", "I", "O", "U"];
+
         for (let key in this.letter_frequency) {
-            freq = this.letter_frequency[key];
-            count = Math.trunc(Math.round(freq / 100) * size * size);
-            letters.append(key.repeat(count));
+            let vowel_penalty = this.normal_distribution(0, 0.2);
+            vowel_penalty = Math.abs(vowel_penalty);
+            let freq = this.letter_frequency[key];
+            freq += random_noise;
+            if (freq > max_freq) {
+                freq = max_freq;
+            }
+            if (freq < min_freq) {
+                freq = min_freq;
+            }
+
+            if (vowels.includes(key)) {
+                freq -= vowel_penalty;
+            }
+
+            let count = Math.trunc((freq / 100) * Math.pow(size, 2));
+            // console.log(`key: ${key}, freq: ${freq / 100}, count: ${count}`);
+            letters.push(key.repeat(count));
         }
+        letters = letters.toString().split("");
+        letters = letters.filter((letter) => letter != ",");
+
         letters = this.fisher_yates_shuffle(letters);
 
         // concat to string
-        letters = letters.join("");
-        letters = letters.slice(0, size);
+        letters = letters.toString().replace(/,/g, "");
+        letters = letters.substring(0, size);
         this.board = letters;
+        console.log(letters);
     }
 
     fisher_yates_shuffle(letters) {
@@ -54,7 +85,8 @@ class Board {
             const j = Math.floor(Math.random() * (i + 1));
             [letters[i], letters[j]] = [letters[j], letters[i]];
         }
+        return letters;
     }
 }
 
-export default board;
+module.exports = Board;
