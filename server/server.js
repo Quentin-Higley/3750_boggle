@@ -7,12 +7,14 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
+const LogModel = require("./models/loginModel.js");
+
 
 const app = express();
 
 app.use(
     cors({
-        origin: "http://localhost:3000/",
+        origin: "http://localhost:3000",
         credentials: true,
     })
 );
@@ -40,6 +42,107 @@ app.use(
 );
 
 configureDatabase();
+
+//#region Login logic
+app.get("/login", (req, res) => {
+    const salty = Math.floor(Math.random() * 9999) + 1;
+    res.send(salty.toString())
+})
+
+app.get("/createlogin", (req, res) => {
+    const salty = Math.floor(Math.random() * 9999) + 1;
+    res.send(salty.toString())
+})
+
+app.post("/login", (req, res) => {
+    const userName = req.body.userName
+    const password = req.body.password
+    // console.log("the pass: " + password)
+    // console.log("username: " + userName)
+    // console.log("salt: " + salty)
+    
+    if (password != '')
+    {
+        LogModel.findOne({ userName: userName })
+            .then(user => {
+                console.log(user);
+                if (user) {
+                    if (user.password === req.body.password) {
+                        res.send("passGood");
+                    }
+                    else {
+                        res.send("passBad");
+                    }
+                }
+
+            })
+        
+    }
+    else {
+            LogModel.findOne({ userName: userName })
+            .then(user => {
+                console.log(user);
+                if (user) {
+                    if (user.userName === req.body.userName) {
+                        res.send("userExists " + user.salt);
+                        existSalt = user.salt;
+                    }
+                    else {
+                        res.send("userTrue");
+                    }
+                }
+                else {
+                    res.send("userTrue");
+                }
+            })
+
+    }
+})
+
+app.post("/createlogin", (req, res) => {
+    const userName = req.body.userName
+    const password = req.body.password
+    // console.log("the pass: " + password)
+    // console.log("username: " + userName)
+    // console.log("salt: " + salty)
+    
+    if (password != '')
+    {
+        console.log(req.salt)
+        postLogInfo(req);
+        res.send('passGood');       
+    }
+    else {
+            LogModel.findOne({ userName: userName })
+            .then(user => {
+                console.log(user);
+                if (user) {
+                    if (user.userName === req.body.userName) {
+                        res.send("userExists");
+                    }
+                    else {
+                        res.send("userTrue");
+                    }
+                }
+                else {
+                    res.send("userTrue");
+                }
+            })
+
+    }
+})
+
+
+function postLogInfo(req) {
+    LogModel.create(req.body)
+    .then((someResponseObject) => {
+        console.log({ someResponseObject});
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+};
+//#endregion
 
 // start the server
 app.listen(4000, () => {
