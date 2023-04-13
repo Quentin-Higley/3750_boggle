@@ -106,18 +106,18 @@ function Login() {
     }
 
     return ( //The html for the page
-    <div class="container">
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">
                 <h4 id="loglbl"></h4>
                 <br/>
                 <div class="row">
                     <label id="userNamelbl">UserName:</label>
-                    <input type="text" name="username" id="username" onChange={handleChange}></input>
+                    <input type="text" name="username" id="username" class="w-25" onChange={handleChange}></input>
                 </div>
                 
                 <div class="row">
                     <label id="passwordlbl">Password:</label>
-                    <input type="text" name="personName" id="password" onChange={handleChange}></input>
+                    <input type="text" name="personName" id="password" class="w-25" onChange={handleChange}></input>
                 </div>
                 
                 <div class="row m-3">
