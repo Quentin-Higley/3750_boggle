@@ -3,7 +3,7 @@ class Player {
         /**`
          * Creates a player
          *
-         * @param {string} name - name of the player
+         * 
          *
          * @property {string} username - username of the player
          * @property {int} score - score of the player

@@ -96,6 +96,7 @@ function Login() {
             {
                 location.href = '/lobby'//waiting room
                 localStorage.setItem("loggedIn", res.data.loggedIn);
+                localStorage.setITem("userName", logInfo.userName);
             }
             else if(res.data == "passBad")
             {
@@ -108,6 +109,7 @@ function Login() {
             console.log("Error, couldn't login")
             console.log(err.message);
         })
+        axios.post("http://localhost:4000/createPlayer", logInfo)
     }
 
     return ( //The html for the page

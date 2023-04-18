@@ -4,21 +4,25 @@ const Lobby = ({ playerID, lobbyID }) => {
   const [players, setPlayers] = useState([]);
   const [ready, setReady] = useState(false);
 
-  useEffect(() => {
-    if (lobbyID) {
-      const interval = setInterval(() => {
-        fetchLobbyData();
-      }, 1000); // Polling every 1 second
-      return () => clearInterval(interval);
-    }
-  }, [lobbyID]);
+  // useEffect(() => {
+  //   if (lobbyID) {
+  //     const interval = setInterval(() => {
+  //       fetchLobbyData();
+  //     }, 1000); // Polling every 1 second
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [lobbyID]);
   
 
-  const fetchLobbyData = async () => {
-    const response = await fetch(`/api/lobby/${lobbyID}`);
-    const data = await response.json();
-    setPlayers(data.players);
-  };
+  // const fetchLobbyData = async () => {
+  //   const response = await fetch(`/api/lobby/${lobbyID}`);
+  //   const data = await response.json();
+  //   setPlayers(data.players);
+  // };
+
+  /********************
+   *  TODO add initial get call with an interval to get players and check ready status
+   */
 
   const handleReadyClick = async () => {
     setReady(!ready);

@@ -92,6 +92,7 @@ function CreateLogin() {
             {
                 location.href = '/lobby'//waiting room
                 localStorage.setItem("loggedIn", res.data.loggedIn);
+                localStorage.setITem("userName", logInfo.userName);
             }
         }
         )

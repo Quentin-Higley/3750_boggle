@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
+const PlayerModel = require("./models/Players.js");
+const LobbyModel = require("./models/Lobby.js")
+const lobbyID = Math.floor(Math.random() * 99999) + 1;
 
 
 // datamuse routes
@@ -148,10 +151,35 @@ function postLogInfo(req) {
     .catch((err) => {
         console.log(err);
     });
+    
+    PlayerModel.create(req.body.userName, false, lobbyID)
+    .then((someResponseObject) => {
+        console.log({ someResponseObject});
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 };
-
+//#endregion
 // game object
 var game = new Game(4, 60);
+
+
+// Create Player on database
+
+app.post("/createPlayer", (req, res) => {
+    userName = req.body.userName
+    game.add_player(userName);
+    PlayerModel.create(userName, false, lobbyID)
+    .then((someResponseObject) => {
+        console.log({ someResponseObject});
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+})
+
+//TODO create axios get call for lobby to retrieve players
 
 // start the server
 app.listen(4000, () => {

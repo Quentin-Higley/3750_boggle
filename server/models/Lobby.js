@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const LobbySchema = new mongoose.Schema({
-  players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
+  lobbyID: { type: Number, required: true },
   gameStarted: { type: Boolean, default: false },
 });
 
