@@ -10,6 +10,12 @@ const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
 
 
+// datamuse routes
+const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+
+// import objects
+const Game = require("./objects/boggle_game.js");
+
 const app = express();
 
 app.use(
@@ -42,6 +48,7 @@ app.use(
 );
 
 configureDatabase();
+
 
 //#region Login logic
 app.get("/login", (req, res) => {
@@ -142,7 +149,9 @@ function postLogInfo(req) {
         console.log(err);
     });
 };
-//#endregion
+
+// game object
+var game = new Game(4, 60);
 
 // start the server
 app.listen(4000, () => {

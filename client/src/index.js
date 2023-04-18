@@ -17,6 +17,11 @@ function App() {
             <Route path='/login' element={<Login/>}/>
             <Route path='/createlogin' element={<CreateLogin/>}/>
 
+
+            <Route
+                path="/game"
+                element={<Game />}
+            />
         </Routes>
     );
 }
