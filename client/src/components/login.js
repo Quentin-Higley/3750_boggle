@@ -73,6 +73,11 @@ function Login() {
         })
     }
 
+
+    function newUser(e) {
+        e.preventDefault();
+        location.href = '/createlogin';
+    }
     
     function handlePass(e) {
         e.preventDefault();
@@ -89,7 +94,7 @@ function Login() {
 
             if(res.data == "passGood")
             {
-                location.href = ''//waiting room
+                location.href = '/lobby'//waiting room
                 localStorage.setItem("loggedIn", res.data.loggedIn);
             }
             else if(res.data == "passBad")
@@ -108,7 +113,15 @@ function Login() {
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">
-                <h4 id="loglbl"></h4>
+                <div class="row">
+                    <div class="col">
+                        <h4 id="loglbl"></h4>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" onClick={newUser}>Create New User</button>
+                    </div>
+                </div>
+                
                 <br/>
                 <div class="row">
                     <label id="userNamelbl">UserName:</label>
@@ -117,7 +130,7 @@ function Login() {
                 
                 <div class="row">
                     <label id="passwordlbl">Password:</label>
-                    <input type="text" name="personName" id="password" class="w-25" onChange={handleChange}></input>
+                    <input type="password" name="personName" id="password" class="w-25" onChange={handleChange}></input>
                 </div>
                 
                 <div class="row m-3">
