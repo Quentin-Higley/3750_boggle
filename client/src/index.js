@@ -3,6 +3,8 @@ import axios from "axios";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Lobby from './Lobby'; 
+
 import Login from "./components/login";
 import CreateLogin from "./components/createLogin";
 
@@ -11,6 +13,7 @@ function App() {
     return (
         <Routes>
             <Route
+                path="/lobby" element={<Lobby />}
                 path="/"
                 element={<Login />}
             />
