@@ -3,14 +3,15 @@ import axios from "axios";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Lobby from './Lobby'; 
+
 
 function App() {
     axios.defaults.withCredentials = true;
     return (
         <Routes>
             <Route
-                path="/"
-                element={<Replace />}
+                path="/lobby" element={<Lobby />}
             />
         </Routes>
     );
