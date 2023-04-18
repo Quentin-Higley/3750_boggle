@@ -27,7 +27,7 @@ class Game {
         };
     }
 
-    submit_word(player, word) {
+    submit_word(word) {
         /**
          * Submits a word to the game
          *
@@ -37,9 +37,18 @@ class Game {
          * @returns {boolean} - True if the word was valid, false otherwise
          */
         if (this.bfs.search(word)) {
-            player.add_score(this.get_score(word));
-            player.add_word(word);
+            return true;
         }
+    }
+
+    score_word(player, word) {
+        /**
+         * Scores a word
+         *
+         * @param {Player} player - The player that submitted the word
+         * @param {string} word - The word that was submitted
+         */
+        player.add_score(this.get_score(word));
     }
 
     get_score(word) {
