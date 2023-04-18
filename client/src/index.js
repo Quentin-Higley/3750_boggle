@@ -3,6 +3,8 @@ import axios from "axios";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Login from "./components/login";
+import CreateLogin from "./components/createLogin";
 
 function App() {
     axios.defaults.withCredentials = true;
@@ -10,8 +12,11 @@ function App() {
         <Routes>
             <Route
                 path="/"
-                element={<Replace />}
+                element={<Login />}
             />
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/createlogin' element={<CreateLogin/>}/>
+
 
             <Route
                 path="/game"
