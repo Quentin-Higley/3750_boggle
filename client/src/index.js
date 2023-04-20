@@ -12,9 +12,7 @@ function App() {
     axios.defaults.withCredentials = true;
     return (
         <Routes>
-            <Route
-                path="/lobby" element={<Lobby />}
-            />
+            <Route path="/lobby" element={<Lobby />}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/createlogin' element={<CreateLogin/>}/>
 
