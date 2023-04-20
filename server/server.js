@@ -9,9 +9,8 @@ const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
 const PlayerModel = require("./models/Players.js");
-const LobbyModel = require("./models/Lobby.js")
+const LobbyModel = require("./models/Lobby.js");
 const lobbyID = Math.floor(Math.random() * 99999) + 1;
-
 
 // datamuse routes
 const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
@@ -151,8 +150,8 @@ function postLogInfo(req) {
     .catch((err) => {
         console.log(err);
     });
-    
-    PlayerModel.create(req.body.userName, false, lobbyID)
+    req.body.lobbyID = lobbyID;
+    PlayerModel.create(req.body)
     .then((someResponseObject) => {
         console.log({ someResponseObject});
     })
@@ -168,11 +167,23 @@ var game = new Game(4, 60);
 // Create Player on database
 
 app.post("/createPlayer", (req, res) => {
+    req.body.lobbyID = lobbyID;
+    game.add_player(userName);
+    PlayerModel.create(req.body)
+    .then((someResponseObject) => {
+        console.log(JSON.stringify(someResponseObject));
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+})
+
+app.post("/updatePlayer", (req, res) => {
     userName = req.body.userName
     game.add_player(userName);
-    PlayerModel.create(userName, false, lobbyID)
+    PlayerModel.findOneAndUpdate({userName: userName}, {lobbyID: lobbyID}, {new: true})
     .then((someResponseObject) => {
-        console.log({ someResponseObject});
+        console.log(JSON.stringify(someResponseObject));
     })
     .catch((err) => {
         console.log(err);
@@ -180,6 +191,17 @@ app.post("/createPlayer", (req, res) => {
 })
 
 //TODO create axios get call for lobby to retrieve players
+app.get("/findPlayers", (req, res) => {
+    PlayerModel.find({ lobbyID: lobbyID })
+    .then((someResponseObject) => {
+        console.log({ someResponseObject });
+        res.json(someResponseObject);
+      })
+      .catch((err) => {
+        res.status(404).json({message: "Error listing players", error: err.message});
+      });
+})
+
 
 // start the server
 app.listen(4000, () => {

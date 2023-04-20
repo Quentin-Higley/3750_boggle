@@ -6,4 +6,7 @@ const PlayerSchema = new mongoose.Schema({
   lobbyID: {type: Number, required: true}
 });
 
-module.exports = mongoose.model('Player', PlayerSchema);
+//module.exports = mongoose.model('Player', PlayerSchema);
+
+const AppPlayer = mongoose.model("playerInfo", PlayerSchema);
+module.exports = AppPlayer
