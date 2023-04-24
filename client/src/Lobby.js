@@ -26,11 +26,22 @@ const Lobby = ({ playerID, lobbyID }) => {
     const response = await fetch(`/api/lobby/${lobbyID}`);
     const data = await response.json();
     setPlayers(data.players);
+  
+    // Log the ready/unready status of players
+    console.log("Players' ready/unready status:");
+    data.players.forEach((player) => {
+      console.log(`${player.username}: ${player.ready ? 'Ready' : 'Not Ready'}`);
+    });
   };
+  
 
   const handleReadyClick = async () => {
     setReady(!ready);
-    const response = await fetch('http/localhost:4000/api/lobby/setReady', {
+  
+    // Log the player's ready/unready status
+    console.log(`Player ${player.username} is ${!ready ? 'ready' : 'unready'}`);
+  
+    const response = await fetch('http://localhost:4000/api/setReady', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,6 +49,8 @@ const Lobby = ({ playerID, lobbyID }) => {
       body: JSON.stringify({ playerID, ready: !ready }),
     });
   };
+  
+  
 
   return (
     <div>

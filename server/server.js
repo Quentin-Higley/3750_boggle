@@ -147,6 +147,15 @@ app.post('/api/createPlayer', (req, res) => {
     res.json(player);
   });
 
+  //Updating Player Ready Status
+  app.post('/api/setReady', (req, res) => {
+    const { playerID, ready } = req.body;
+  
+    // Update the ready status of the player in your server data (e.g., in-memory storage, database, etc.)
+  
+    res.json({ message: 'Player ready status updated' });
+  });
+
 function postLogInfo(req) {
     LogModel.create(req.body)
     .then((someResponseObject) => {
