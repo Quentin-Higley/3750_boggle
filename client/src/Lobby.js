@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Lobby = ({ playerID, lobbyID }) => {
+  const [player, setPlayer] = useState(null);
   const [players, setPlayers] = useState([]);
   const [ready, setReady] = useState(false);
 
@@ -13,6 +14,13 @@ const Lobby = ({ playerID, lobbyID }) => {
     }
   }, [lobbyID]);
   
+  useEffect(() => {
+    const storedPlayer = localStorage.getItem("player");
+    if (storedPlayer) {
+      setPlayer(JSON.parse(storedPlayer));
+    }
+  }, []);
+  
 
   const fetchLobbyData = async () => {
     const response = await fetch(`/api/lobby/${lobbyID}`);
@@ -22,7 +30,7 @@ const Lobby = ({ playerID, lobbyID }) => {
 
   const handleReadyClick = async () => {
     setReady(!ready);
-    const response = await fetch('/api/lobby/setReady', {
+    const response = await fetch('http/localhost:4000/api/lobby/setReady', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,9 +49,16 @@ const Lobby = ({ playerID, lobbyID }) => {
           </li>
         ))}
       </ul>
+      {player && (
+        <div>
+          <h2>Your player info:</h2>
+          <p>Username: {player.username}</p>
+        </div>
+      )}
       <button onClick={handleReadyClick}>{ready ? 'Unready' : 'Ready'}</button>
     </div>
   );
+  
 };
 
 export default Lobby;

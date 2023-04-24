@@ -14,17 +14,17 @@ function App() {
         <Routes>
             <Route
                 path="/lobby" element={<Lobby />}
-                path="/"
-                element={<Login />}
+                // path="/"
+                // element={<Login />}
             />
             <Route path='/login' element={<Login/>}/>
             <Route path='/createlogin' element={<CreateLogin/>}/>
 
-
+{/* 
             <Route
                 path="/game"
                 element={<Game />}
-            />
+            /> */}
         </Routes>
     );
 }

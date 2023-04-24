@@ -73,6 +73,11 @@ function Login() {
         })
     }
 
+
+    function newUser(e) {
+        e.preventDefault();
+        location.href = '/createlogin';
+    }
     
     function handlePass(e) {
         e.preventDefault();
@@ -87,15 +92,20 @@ function Login() {
         .then((res) => {
             console.log("The response is: " + res.data);
 
-            if(res.data == "passGood")
-            {
-                location.href = ''//waiting room
-                localStorage.setItem("loggedIn", res.data.loggedIn);
-            }
-            else if(res.data == "passBad")
-            {
-                document.getElementById("loglbl").innerHTML = "Please enter the correct password";
-            }
+            if (res.data == "passGood") {
+                axios.post("http://localhost:4000/api/createPlayer", { username: logInfo.userName })
+                  .then((playerRes) => {
+                    localStorage.setItem("loggedIn", res.data.loggedIn);
+                    localStorage.setItem("userName", logInfo.userName);
+                    localStorage.setItem("player", JSON.stringify(playerRes.data)); // Store the player object
+                    location.href = '/lobby'; // waiting room
+                  })
+                  .catch((err) => {
+                    console.log("Error, couldn't create a player object");
+                    console.log(err.message);
+                  });
+              }
+              
 
         }
         )
@@ -103,12 +113,21 @@ function Login() {
             console.log("Error, couldn't login")
             console.log(err.message);
         })
+        axios.post("http://localhost:4000/createPlayer", logInfo)
     }
 
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">
-                <h4 id="loglbl"></h4>
+                <div class="row">
+                    <div class="col">
+                        <h4 id="loglbl"></h4>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" onClick={newUser}>Create New User</button>
+                    </div>
+                </div>
+                
                 <br/>
                 <div class="row">
                     <label id="userNamelbl">UserName:</label>
@@ -117,7 +136,7 @@ function Login() {
                 
                 <div class="row">
                     <label id="passwordlbl">Password:</label>
-                    <input type="text" name="personName" id="password" class="w-25" onChange={handleChange}></input>
+                    <input type="password" name="personName" id="password" class="w-25" onChange={handleChange}></input>
                 </div>
                 
                 <div class="row m-3">

@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
+const Player = require('./objects/boggle_player');
 
 
 // datamuse routes
@@ -139,6 +140,12 @@ app.post("/createlogin", (req, res) => {
     }
 })
 
+//Creating Player based off username
+app.post('/api/createPlayer', (req, res) => {
+    const username = req.body.username;
+    const player = new Player(username);
+    res.json(player);
+  });
 
 function postLogInfo(req) {
     LogModel.create(req.body)
