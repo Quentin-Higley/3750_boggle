@@ -90,26 +90,24 @@ function Login() {
         console.log(localPass)
         axios.post("http://localhost:4000/login", logInfo)
         .then((res) => {
-            console.log("The response is: " + res.data);
+        console.log("The response is: " + res.data);
 
-            if(res.data == "passGood")
-            {
-                location.href = '/lobby'//waiting room
-                localStorage.setItem("loggedIn", res.data.loggedIn);
-            }
-            else if(res.data == "passBad")
-            {
-                document.getElementById("loglbl").innerHTML = "Please enter the correct password";
-            }
-
+        if (res.data == "passGood") {
+            navigate("/lobby", {
+                state: { username: logInfo.userName, playerID: 'your_player_id', lobbyID: 'your_lobby_id' },
+                replace: true,
+              });
+          localStorage.setItem("loggedIn", res.data.loggedIn);
+        } else if (res.data == "passBad") {
+          document.getElementById("loglbl").innerHTML =
+            "Please enter the correct password";
         }
-        )
-        .catch((err) => {
-            console.log("Error, couldn't login")
-            console.log(err.message);
-        })
-    }
-
+      })
+      .catch((err) => {
+        console.log("Error, couldn't login");
+        console.log(err.message);
+      });
+  }
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">
