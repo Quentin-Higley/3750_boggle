@@ -92,15 +92,20 @@ function Login() {
         .then((res) => {
             console.log("The response is: " + res.data);
 
-            if(res.data == "passGood")
-            {
-                location.href = '/lobby'//waiting room
-                localStorage.setItem("loggedIn", res.data.loggedIn);
-            }
-            else if(res.data == "passBad")
-            {
-                document.getElementById("loglbl").innerHTML = "Please enter the correct password";
-            }
+            if (res.data == "passGood") {
+                axios.post("http://localhost:4000/api/createPlayer", { username: logInfo.userName })
+                  .then((playerRes) => {
+                    localStorage.setItem("loggedIn", res.data.loggedIn);
+                    localStorage.setItem("userName", logInfo.userName);
+                    localStorage.setItem("player", JSON.stringify(playerRes.data)); // Store the player object
+                    location.href = '/lobby'; // waiting room
+                  })
+                  .catch((err) => {
+                    console.log("Error, couldn't create a player object");
+                    console.log(err.message);
+                  });
+              }
+              
 
         }
         )
@@ -108,8 +113,8 @@ function Login() {
             console.log("Error, couldn't login")
             console.log(err.message);
         })
+        axios.post("http://localhost:4000/createPlayer", logInfo)
     }
-
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">
