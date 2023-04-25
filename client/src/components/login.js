@@ -90,24 +90,31 @@ function Login() {
         console.log(localPass)
         axios.post("http://localhost:4000/login", logInfo)
         .then((res) => {
-        console.log("The response is: " + res.data);
+            console.log("The response is: " + res.data);
 
-        if (res.data == "passGood") {
-            navigate("/lobby", {
-                state: { username: logInfo.userName, playerID: 'your_player_id', lobbyID: 'your_lobby_id' },
-                replace: true,
-              });
-          localStorage.setItem("loggedIn", res.data.loggedIn);
-        } else if (res.data == "passBad") {
-          document.getElementById("loglbl").innerHTML =
-            "Please enter the correct password";
+            if (res.data == "passGood") {
+                axios.post("http://localhost:4000/api/createPlayer", { username: logInfo.userName })
+                  .then((playerRes) => {
+                    localStorage.setItem("loggedIn", res.data.loggedIn);
+                    localStorage.setItem("userName", logInfo.userName);
+                    localStorage.setItem("player", JSON.stringify(playerRes.data)); // Store the player object
+                    location.href = '/lobby'; // waiting room
+                  })
+                  .catch((err) => {
+                    console.log("Error, couldn't create a player object");
+                    console.log(err.message);
+                  });
+              }
+              
+
         }
-      })
-      .catch((err) => {
-        console.log("Error, couldn't login");
-        console.log(err.message);
-      });
-  }
+        )
+        .catch((err) => {
+            console.log("Error, couldn't login")
+            console.log(err.message);
+        })
+        axios.post("http://localhost:4000/createPlayer", logInfo)
+    }
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">

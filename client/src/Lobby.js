@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const Lobby = ({ playerID, lobbyID }) => {
+  const [player, setPlayer] = useState(null);
 // Lobby component
 const Lobby = (props) => {
   // State variables
@@ -26,13 +28,28 @@ const Lobby = (props) => {
       return () => clearInterval(interval);
     }
   }, [lobbyID]);
+  
+  useEffect(() => {
+    const storedPlayer = localStorage.getItem("player");
+    if (storedPlayer) {
+      setPlayer(JSON.parse(storedPlayer));
+    }
+  }, []);
+  
 
   // Fetch lobby data from the server
   const fetchLobbyData = async () => {
     const response = await fetch(`/api/lobby/${lobbyID}`);
     const data = await response.json();
     setPlayers(data.players);
+  
+    // Log the ready/unready status of players
+    console.log("Players' ready/unready status:");
+    data.players.forEach((player) => {
+      console.log(`${player.username}: ${player.ready ? 'Ready' : 'Not Ready'}`);
+    });
   };
+  
 
   // Update allPlayersReady state based on the ready state of all players
   useEffect(() => {
@@ -45,6 +62,13 @@ const Lobby = (props) => {
 
   // Handle the click event for the Ready button
   const handleReadyClick = async () => {
+    setReady(!ready);
+  
+    // Log the player's ready/unready status
+    console.log(`Player ${player.username} is ${!ready ? 'ready' : 'unready'}`);
+  
+    const response = await fetch('http://localhost:4000/api/setReady', {
+      method: 'POST',
     const newReadyStatus = !ready;
     setReady(newReadyStatus);
     const response = await fetch("/api/lobby/setReady", {
@@ -66,6 +90,8 @@ const Lobby = (props) => {
       }, 3000);
     }
   };
+  
+  
 
   // Filter out the current user from the list of players
   const otherPlayers = players.filter(player => player.username !== loggedInUsername);
@@ -83,11 +109,19 @@ const Lobby = (props) => {
           </li>
         ))}
       </ul>
+      {player && (
+        <div>
+          <h2>Your player info:</h2>
+          <p>Username: {player.username}</p>
+        </div>
+      )}
+      <button onClick={handleReadyClick}>{ready ? 'Unready' : 'Ready'}</button>
       <button onClick={handleReadyClick}>{ready ? "Unready" : "Ready"}</button>
-      {startMessage && <h3>{startMessage}</h3
->}
+      {startMessage && <h3>{startMessage}</h3>
+      }
     </div>
   );
+  
 };
 
 export default Lobby;

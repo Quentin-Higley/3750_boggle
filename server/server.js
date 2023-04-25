@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
+const Player = require('./objects/boggle_player');
 
 // datamuse routes
 const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
@@ -124,6 +125,21 @@ app.post("/createlogin", (req, res) => {
     }
 });
 
+//Creating Player based off username
+app.post('/api/createPlayer', (req, res) => {
+    const username = req.body.username;
+    const player = new Player(username);
+    res.json(player);
+  });
+
+  //Updating Player Ready Status
+  app.post('/api/setReady', (req, res) => {
+    const { playerID, ready } = req.body;
+  
+    // Update the ready status of the player in your server data (e.g., in-memory storage, database, etc.)
+  
+    res.json({ message: 'Player ready status updated' });
+  });
 app.post("/checkword", (req, res) => {
     const word = req.body.word;
     const url = dictionaryUrl + word;
