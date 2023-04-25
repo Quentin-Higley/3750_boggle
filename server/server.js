@@ -125,6 +125,10 @@ app.post("/createlogin", (req, res) => {
     }
 });
 
+app.get("/getBoard", (req, res) => {
+    res.send(boggleGame.board);
+});
+
 //Creating Player based off username
 app.post('/api/createPlayer', (req, res) => {
     const username = req.body.username;
@@ -145,23 +149,45 @@ app.post("/checkword", (req, res) => {
     const url = dictionaryUrl + word;
     const player = req.body.player;
     // check if word is on the board
-    if (boggleGame.submit_word(word)) {
+    found = boggleGame.submit_word(word);
+    console.log(`found: ${found}`);
+    console.log(`word: ${word}`);
+    if (boggleGame.submit_word(found)) {
         // check if word is in the dictionary
-        fetch(url)
-            .then((response) => {
-                if (response.word == word) {
-                    player.score_word(player, word);
-                    res.send("good");
-                } else {
-                    res.send("bad");
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        console.log(`url: ${url}`);
+        // fetch(url)
+        //     .then((response) => {
+        //         console.log(response.json());
+        //         if (response.word == word) {
+        //             player.score_word(player, word);
+        //             res.send("good");
+        //         } else {
+        //             res.send("bad");
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
+        response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const result = await response.json();
+        if (result[0].word == word) {
+            console.log(`score ${boggleGame.score_word(word)}`);
+            res.send("good");
+        } else {
+            res.send("bad");
+        }
     } else {
         res.send("bad");
     }
+});
+
+app.get("/getScores", (res, req) => {
+    res.send(boggleGame.players);
 });
 
 function postLogInfo(req) {
