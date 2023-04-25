@@ -36,7 +36,6 @@ const Lobby = ({ playerID, lobbyID }) => {
     });
   };
 
-  // function to handle ready up. not working/implemented
  function handleReady(e) {
     e.preventDefault();
     axios.post('http://localhost:4000/readyUp', e.target.userName)
@@ -51,6 +50,8 @@ const Lobby = ({ playerID, lobbyID }) => {
       <ul>
         {items.map((player, i) => (
           <li key={i}>
+            {player.userName} - {JSON.stringify(player.ready)}
+            {player.userName == localStorage.getItem("userName") ? <button>Ready</button> : <p></p>}
             
           </li>
         ))}
