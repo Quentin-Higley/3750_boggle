@@ -89,16 +89,16 @@ class BFS {
             found: false,
             letterPos: new Set(),
         };
-
+        console.log(`Searching for ${word}`);
         // find all starting indexes
         for (let i = 0; i < this.board.board.length; i++) {
             if (this.board.board[i] == word[0]) {
                 start.add(i);
             }
         }
-
+        console.log(`Found ${start.size} starting positions`);
         if (start.size == 0) {
-            return letterPos;
+            return false;
         }
 
         for (let i of start) {

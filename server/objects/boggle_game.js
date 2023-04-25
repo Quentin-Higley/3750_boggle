@@ -38,6 +38,8 @@ class Game {
          */
         if (this.bfs.search(word)) {
             return true;
+        } else {
+            return false;
         }
     }
 
