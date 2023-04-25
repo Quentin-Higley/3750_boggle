@@ -115,7 +115,6 @@ function Login() {
         })
         axios.post("http://localhost:4000/createPlayer", logInfo)
     }
-
     return ( //The html for the page
     <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
             <form class="myForm">

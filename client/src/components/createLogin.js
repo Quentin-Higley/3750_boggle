@@ -102,6 +102,11 @@ function CreateLogin() {
                   });
               }
               
+            if(res.data == "passGood")
+            {
+                location.href = '/lobby'//waiting room
+                localStorage.setItem("loggedIn", res.data.loggedIn);
+            }
         }
         )
         .catch((err) => {
@@ -122,7 +127,7 @@ function CreateLogin() {
                 
                 <div class="row">
                     <label id="passwordlbl">Password:</label>
-                    <input type="text" name="personName" id="password" class="w-25" onChange={handleChange}></input>
+                    <input type="password" name="personName" id="password" class="w-25" onChange={handleChange}></input>
                 </div>
                 
                 <div class="row m-3">

@@ -91,7 +91,9 @@ class Board {
         letters = letters.filter((letter) => letter != ",");
 
         letters = this.fisher_yates_shuffle(letters);
-
+        for (let i = 0; i < 30; i++) {
+            letters = this.fisher_yates_shuffle(letters);
+        }
         // concat to string
         letters = letters.toString().replace(/,/g, "");
         letters = letters.substring(0, size);
