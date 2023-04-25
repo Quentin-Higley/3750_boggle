@@ -10,7 +10,6 @@ const configureDatabase = require("./db/db.js");
 const LogModel = require("./models/loginModel.js");
 const Player = require('./objects/boggle_player');
 
-
 // datamuse routes
 const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
@@ -18,6 +17,9 @@ const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 const Game = require("./objects/boggle_game.js");
 
 const app = express();
+
+// set up game
+boggleGame = new Game(4, 60);
 
 app.use(
     cors({
@@ -50,95 +52,78 @@ app.use(
 
 configureDatabase();
 
-
 //#region Login logic
 app.get("/login", (req, res) => {
     const salty = Math.floor(Math.random() * 9999) + 1;
-    res.send(salty.toString())
-})
+    res.send(salty.toString());
+});
 
 app.get("/createlogin", (req, res) => {
     const salty = Math.floor(Math.random() * 9999) + 1;
-    res.send(salty.toString())
-})
+    res.send(salty.toString());
+});
 
 app.post("/login", (req, res) => {
-    const userName = req.body.userName
-    const password = req.body.password
+    const userName = req.body.userName;
+    const password = req.body.password;
     // console.log("the pass: " + password)
     // console.log("username: " + userName)
     // console.log("salt: " + salty)
-    
-    if (password != '')
-    {
-        LogModel.findOne({ userName: userName })
-            .then(user => {
-                console.log(user);
-                if (user) {
-                    if (user.password === req.body.password) {
-                        res.send("passGood");
-                    }
-                    else {
-                        res.send("passBad");
-                    }
-                }
 
-            })
-        
-    }
-    else {
-            LogModel.findOne({ userName: userName })
-            .then(user => {
-                console.log(user);
-                if (user) {
-                    if (user.userName === req.body.userName) {
-                        res.send("userExists " + user.salt);
-                        existSalt = user.salt;
-                    }
-                    else {
-                        res.send("userTrue");
-                    }
+    if (password != "") {
+        LogModel.findOne({ userName: userName }).then((user) => {
+            console.log(user);
+            if (user) {
+                if (user.password === req.body.password) {
+                    res.send("passGood");
+                } else {
+                    res.send("passBad");
                 }
-                else {
+            }
+        });
+    } else {
+        LogModel.findOne({ userName: userName }).then((user) => {
+            console.log(user);
+            if (user) {
+                if (user.userName === req.body.userName) {
+                    res.send("userExists " + user.salt);
+                    existSalt = user.salt;
+                } else {
                     res.send("userTrue");
                 }
-            })
-
+            } else {
+                res.send("userTrue");
+            }
+        });
     }
-})
+});
 
 app.post("/createlogin", (req, res) => {
-    const userName = req.body.userName
-    const password = req.body.password
+    const userName = req.body.userName;
+    const password = req.body.password;
     // console.log("the pass: " + password)
     // console.log("username: " + userName)
     // console.log("salt: " + salty)
-    
-    if (password != '')
-    {
-        console.log(req.salt)
+
+    if (password != "") {
+        console.log(req.salt);
         postLogInfo(req);
-        res.send('passGood');       
-    }
-    else {
-            LogModel.findOne({ userName: userName })
-            .then(user => {
-                console.log(user);
-                if (user) {
-                    if (user.userName === req.body.userName) {
-                        res.send("userExists");
-                    }
-                    else {
-                        res.send("userTrue");
-                    }
-                }
-                else {
+        res.send("passGood");
+    } else {
+        LogModel.findOne({ userName: userName }).then((user) => {
+            console.log(user);
+            if (user) {
+                if (user.userName === req.body.userName) {
+                    res.send("userExists");
+                } else {
                     res.send("userTrue");
                 }
-            })
-
+            } else {
+                res.send("userTrue");
+            }
+        });
     }
-})
+});
 
 //Creating Player based off username
 app.post('/api/createPlayer', (req, res) => {
@@ -155,16 +140,39 @@ app.post('/api/createPlayer', (req, res) => {
   
     res.json({ message: 'Player ready status updated' });
   });
+app.post("/checkword", (req, res) => {
+    const word = req.body.word;
+    const url = dictionaryUrl + word;
+    const player = req.body.player;
+    // check if word is on the board
+    if (boggleGame.submit_word(word)) {
+        // check if word is in the dictionary
+        fetch(url)
+            .then((response) => {
+                if (response.word == word) {
+                    player.score_word(player, word);
+                    res.send("good");
+                } else {
+                    res.send("bad");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    } else {
+        res.send("bad");
+    }
+});
 
 function postLogInfo(req) {
     LogModel.create(req.body)
-    .then((someResponseObject) => {
-        console.log({ someResponseObject});
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-};
+        .then((someResponseObject) => {
+            console.log({ someResponseObject });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
 
 // game object
 var game = new Game(4, 60);
