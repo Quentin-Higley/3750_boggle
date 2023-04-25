@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Communications
 
 const Lobby = ({ playerID, lobbyID }) => {
   const [players, setPlayers] = useState([]);
   const [ready, setReady] = useState(false);
+  const [items, setItems] = useState([]);
 
-  // useEffect(() => {
-  //   if (lobbyID) {
-  //     const interval = setInterval(() => {
-  //       fetchLobbyData();
-  //     }, 1000); // Polling every 1 second
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [lobbyID]);
-  
+    useEffect(() => {
+            axios.get("http://localhost:4000/findPlayers")
+            .then((JSON) => {
+                console.log(JSON)
+                setItems(JSON.data);
+                console.log(items)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+        },
+        []
+    );
 
-  // const fetchLobbyData = async () => {
-  //   const response = await fetch(`/api/lobby/${lobbyID}`);
-  //   const data = await response.json();
-  //   setPlayers(data.players);
-  // };
-
-  /********************
-   *  TODO add initial get call with an interval to get players and check ready status
-   */
+    setInterval(function () {axios.get("http://localhost:4000/findPlayers")
+      .then((JSON) => {
+        setItems(JSON.data);
+      })}, 500);
 
   const handleReadyClick = async () => {
     setReady(!ready);
@@ -35,17 +36,25 @@ const Lobby = ({ playerID, lobbyID }) => {
     });
   };
 
+  // function to handle ready up. not working/implemented
+ function handleReady(e) {
+    e.preventDefault();
+    axios.post('http://localhost:4000/readyUp', e.target.userName)
+    .then((res) => {
+        console.log(res.data);
+    })
+ }
+
   return (
     <div>
       <h1>Lobby {lobbyID}</h1>
       <ul>
-        {players.map((player) => (
-          <li key={player.id}>
-            {player.username} - {player.ready ? 'Ready' : 'Not Ready'}
+        {items.map((player, i) => (
+          <li key={i}>
+            
           </li>
         ))}
       </ul>
-      <button onClick={handleReadyClick}>{ready ? 'Unready' : 'Ready'}</button>
     </div>
   );
 };

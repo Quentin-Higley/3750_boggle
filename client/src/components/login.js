@@ -8,7 +8,7 @@ import createHash from 'crypto-js';
 function Login() {
     
     const [logInfo, setLogInfo] = useState({userName: "", password: "", salt: ""});
-
+    const [lobInfo, setLobInfo] = useState({userName: "", ready: false, lobbyID: 0})
     window.onload = (() => {
         document.getElementById("password").style.display = "none";
         document.getElementById("passwordlbl").style.display = "none";
@@ -96,7 +96,7 @@ function Login() {
             {
                 location.href = '/lobby'//waiting room
                 localStorage.setItem("loggedIn", res.data.loggedIn);
-                localStorage.setITem("userName", logInfo.userName);
+                localStorage.setItem("userName", logInfo.userName);
             }
             else if(res.data == "passBad")
             {
@@ -109,7 +109,8 @@ function Login() {
             console.log("Error, couldn't login")
             console.log(err.message);
         })
-        axios.post("http://localhost:4000/createPlayer", logInfo)
+        lobInfo.userName = logInfo.userName
+        axios.post("http://localhost:4000/updatePlayer", lobInfo)
     }
 
     return ( //The html for the page

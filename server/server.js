@@ -181,8 +181,13 @@ app.post("/createPlayer", (req, res) => {
 app.post("/updatePlayer", (req, res) => {
     userName = req.body.userName
     game.add_player(userName);
+    req.body.lobbyID = lobbyID;
+    console.log(userName + lobbyID)
     PlayerModel.findOneAndUpdate({userName: userName}, {lobbyID: lobbyID}, {new: true})
     .then((someResponseObject) => {
+        if(!someResponseObject){
+            PlayerModel.create(req.body)
+        }
         console.log(JSON.stringify(someResponseObject));
     })
     .catch((err) => {
